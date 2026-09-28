@@ -1,0 +1,43 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Hanya izinkan satu deployment bersamaan, lewati eksekusi yang antri di antara eksekusi yang sedang berlangsung dan antrian terakhir.
+Namun, JANGAN membatalkan proses yang sedang berlangsung karena kami ingin memungkinkan penerapan produksi ini selesai.
+konkurensi :
+  grup : "halaman"
+  pembatalan sedang berlangsung : salah
+
+Pekerjaan :
+  # Satu pekerjaan deployment karena kita hanya melakukan deployment
+  sebarkan :
+    lingkungan :
+      nama : github-pages
+      URL : $ { { steps.deployment.outputs.page_url } }
+    berjalan di : ubuntu-latest
+    langkah-langkah :
+      - nama : Checkout
+        penggunaan : actions/checkout@v4
+      - nama : Halaman Pengaturan
+        penggunaan : actions/configure-pages@v5
+      - nama : Unggah artefak
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
